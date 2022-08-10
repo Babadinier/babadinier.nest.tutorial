@@ -8,7 +8,8 @@ import { CreateCatDto } from './dto/create-cat.dto';
 export class CatsController {
     constructor(private catsService: CatsService) {}
 
-    @Get('toto')
+    // todo: need to resolve pb. When I call this route without path, I have a redirection to nestjs.com
+    @Get()
     async get(): Promise<Cat[]> {     
         return this.catsService.get();
     }
