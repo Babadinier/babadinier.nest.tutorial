@@ -1,13 +1,16 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { create } from 'domain';
 import { Observable, of } from 'rxjs';
-import { CreateCatDto } from './create-cat.dto';
+import { Cat } from './interfaces/cat.interface';
+import { CatsService } from './cats.service';
+import { CreateCatDto } from './dto/create-cat.dto';
 
 @Controller('cats')
 export class CatsController {
-    @Get()
-    get(): string {
-        return 'This action returns all cats';
+    constructor(private catsService: CatsService) {}
+
+    @Get('toto')
+    async get(): Promise<Cat[]> {     
+        return this.catsService.get();
     }
 
     @Get('observable')
@@ -26,13 +29,12 @@ export class CatsController {
     }
 
     @Post()
-    async post(@Body() createCatDto: CreateCatDto): Promise<string> {
-        if (Object.is(createCatDto, null) || 
-            Object.is(createCatDto, undefined) || 
-            Object.keys(createCatDto).length === 0)
+    async post(@Body() createCatDto: CreateCatDto) {
+        if (createCatDto == null)
         {
             throw new Error('argument null exception');
         }
-        return `Cat created with name: ${createCatDto.name}, age: ${createCatDto.age}, breed: ${createCatDto.breed}`;
+        this.catsService.create(createCatDto);
+        console.log("Enter");
     }
 }
